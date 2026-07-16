@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Glamour Salon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#fff0f6;color:#3d1a2e;transition:background 0.3s}
+
+/* DARK */
+body.dark{background:#1a0a12;color:#f5d0e8}
+body.dark .topnav{background:#1a0a12;border-color:#3d1a2e;box-shadow:none}
+body.dark .nav-logo span{color:#f5d0e8}
+body.dark .nav-link{color:#7a4a64}
+body.dark .nav-link.active,.nav-link:hover{color:#f48fb1}
+body.dark .content{background:#1a0a12}
+body.dark .stat-card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .stat-val{color:#f5d0e8}
+body.dark .card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .card-title{color:#f5d0e8}
+body.dark .appt-row{border-color:#3d1a2e}
+body.dark .appt-name{color:#f5d0e8}
+body.dark .service-card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .svc-name{color:#f5d0e8}
+body.dark .svc-desc{color:#7a4a64}
+body.dark .stylist-card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .stylist-name{color:#f5d0e8}
+body.dark .table-wrap{background:#2a0f1e;border-color:#3d1a2e}
+body.dark thead tr{background:#1a0a12}
+body.dark th{color:#7a4a64}
+body.dark td{border-color:#2a0f1e;color:#9a6a84}
+body.dark .td-main{color:#f5d0e8}
+body.dark .modal{background:#2a0f1e}
+body.dark .modal-title{color:#f5d0e8}
+body.dark .field input,.field select,.field textarea{background:#1a0a12;border-color:#3d1a2e;color:#f5d0e8}
+body.dark .filter-bar{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .cat-pill{background:#1a0a12;border-color:#3d1a2e;color:#7a4a64}
+body.dark .cat-pill.active,.cat-pill:hover{background:#e91e8c;color:#fff;border-color:#e91e8c}
+body.dark .product-card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .product-name{color:#f5d0e8}
+body.dark .page-title{color:#f5d0e8}
+body.dark .review-card{background:#2a0f1e;border-color:#3d1a2e}
+body.dark .review-text{color:#9a6a84}
+
+/* TOAST */
+#toastContainer{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{background:#2a0f1e;border-left:4px solid #e91e8c;border-radius:14px;padding:14px 18px;min-width:280px;max-width:360px;box-shadow:0 8px 32px rgba(233,30,140,0.2);display:flex;align-items:flex-start;gap:12px;animation:slideIn 0.3s ease;color:#f5d0e8}
+.toast.error{border-left-color:#ef4444}
+.toast.warning{border-left-color:#f59e0b}
+.toast.info{border-left-color:#3b82f6}
+.toast-icon{font-size:20px;flex-shrink:0}
+.toast-body{flex:1}
+.toast-title{font-size:13px;font-weight:800;margin-bottom:2px}
+.toast-msg{font-size:12px;color:#b07090;line-height:1.4}
+.toast-close{background:none;border:none;color:#7a4a64;cursor:pointer;font-size:16px}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+
+/* AUTH */
+.auth-page{position:fixed;inset:0;background:linear-gradient(135deg,#ff80b5 0%,#ff4fa0 30%,#c51162 70%,#880e4f 100%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.auth-card{width:100%;max-width:420px}
+.auth-logo{text-align:center;margin-bottom:24px}
+.salon-icon{font-size:60px;display:block;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2))}
+.auth-logo h1{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1.5px;text-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.auth-logo h1 em{font-style:italic;color:#ffe0ef}
+.auth-logo p{font-size:12px;color:rgba(255,255,255,0.8);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+.auth-box{background:rgba(255,255,255,0.95);border-radius:24px;padding:32px;box-shadow:0 24px 60px rgba(0,0,0,0.2)}
+.auth-tabs{display:flex;background:#fff0f6;border-radius:12px;padding:4px;margin-bottom:22px}
+.auth-tab{flex:1;padding:9px 0;border-radius:9px;border:none;background:transparent;color:#b07090;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.auth-tab.active{background:linear-gradient(135deg,#e91e8c,#c51162);color:#fff;box-shadow:0 4px 12px rgba(233,30,140,0.3)}
+.auth-field{margin-bottom:15px}
+.auth-field label{font-size:11px;font-weight:700;color:#e91e8c;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px}
+.auth-input{width:100%;padding:11px 14px;background:#fff0f6;border:1.5px solid #fce4ec;border-radius:10px;color:#3d1a2e;font-size:14px;outline:none;font-family:inherit}
+.auth-input:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,0.1)}
+.auth-input::placeholder{color:#d4a0b8}
+.pass-wrap{position:relative}
+.pass-wrap .auth-input{padding-right:44px}
+.pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#b07090;font-size:16px}
+.auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,#e91e8c,#c51162);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;margin-top:6px;box-shadow:0 6px 20px rgba(233,30,140,0.4);letter-spacing:0.5px}
+.auth-btn:hover{background:linear-gradient(135deg,#f048a0,#d81b60)}
+.demo-box{margin-top:18px;padding:14px;background:#fff0f6;border-radius:12px;border:1px solid #fce4ec}
+.demo-title{font-size:10px;color:#e91e8c;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px}
+.demo-box p{font-size:12px;color:#b07090;line-height:2}
+.demo-box b{color:#e91e8c}
+.a-alert{border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:14px;display:none}
+.a-alert.error{background:#fee2e2;color:#ef4444;border:1px solid #fecaca}
+.a-alert.success{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0}
+
+/* APP */
+.app{display:none;min-height:100vh;flex-direction:column}
+
+/* TOP NAV - horizontal salon style */
+.topnav{background:#fff;border-bottom:2px solid #fce4ec;padding:0 32px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(233,30,140,0.06)}
+.topnav-inner{display:flex;align-items:center;height:64px;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;margin-right:24px;cursor:pointer}
+.nav-logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#e91e8c,#c51162);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(233,30,140,0.3)}
+.nav-logo span{font-size:18px;font-weight:900;color:#3d1a2e;letter-spacing:-0.5px}
+.nav-logo em{font-style:italic;color:#e91e8c}
+.nav-links{display:flex;gap:2px;flex:1;overflow-x:auto}
+.nav-link{padding:8px 16px;border:none;background:transparent;color:#b07090;font-weight:700;font-size:13px;cursor:pointer;border-radius:10px;font-family:inherit;white-space:nowrap;transition:all 0.15s;border-bottom:3px solid transparent}
+.nav-link:hover{background:#fff0f6;color:#e91e8c}
+.nav-link.active{color:#e91e8c;border-bottom-color:#e91e8c;background:#fff0f6}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.user-tag{background:#fff0f6;border:1px solid #fce4ec;border-radius:20px;padding:5px 14px;font-size:12px;color:#b07090;font-weight:700}
+.logout-tag{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:20px;padding:5px 14px;font-size:12px;color:#ef4444;font-weight:700;cursor:pointer;border-style:solid}
+.dark-btn{background:#fff0f6;border:1px solid #fce4ec;border-radius:20px;padding:5px 12px;font-size:12px;color:#b07090;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* CONTENT */
+.content{flex:1;padding:24px 32px;background:#fff0f6;max-width:1200px;margin:0 auto;width:100%}
+.page{display:none}
+.page.active{display:block}
+
+/* HERO BANNER */
+.hero-banner{background:linear-gradient(135deg,#e91e8c,#c51162,#880e4f);border-radius:20px;padding:32px 36px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;position:relative}
+.hero-banner::after{content:"💅✨🌸💄";font-size:60px;position:absolute;right:20px;top:50%;transform:translateY(-50%);opacity:0.15;letter-spacing:10px;pointer-events:none}
+.hero-title{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:6px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.8);margin-bottom:18px}
+.hero-btn{background:#fff;color:#e91e8c;border:none;border-radius:12px;padding:11px 24px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.hero-btn:hover{background:#fff0f6}
+
+/* STATS */
+.stats-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.stat-card{background:#fff;border-radius:16px;padding:18px 22px;flex:1;min-width:130px;border:1px solid #fce4ec;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(233,30,140,0.05)}
+.stat-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stat-val{font-size:24px;font-weight:800;color:#3d1a2e;line-height:1.1}
+.stat-label{font-size:11px;color:#b07090;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+
+/* CARDS */
+.cards-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.card{background:#fff;border-radius:16px;padding:20px;border:1px solid #fce4ec;box-shadow:0 2px 8px rgba(233,30,140,0.04)}
+.card-title{font-size:14px;font-weight:800;color:#3d1a2e;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.appt-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #fff0f6}
+.appt-row:last-child{border-bottom:none}
+.appt-name{font-size:13px;font-weight:700;color:#3d1a2e}
+.appt-meta{font-size:11px;color:#b07090;margin-top:2px}
+.appt-time{font-size:13px;font-weight:800;color:#e91e8c}
+
+/* SERVICE GRID */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.service-card{background:#fff;border-radius:16px;padding:20px;border:2px solid #fce4ec;cursor:pointer;transition:all 0.2s;text-align:center;position:relative}
+.service-card:hover{transform:translateY(-3px);border-color:#e91e8c;box-shadow:0 8px 24px rgba(233,30,140,0.15)}
+.svc-emoji{font-size:40px;display:block;margin-bottom:10px}
+.svc-name{font-size:15px;font-weight:800;color:#3d1a2e;margin-bottom:4px}
+.svc-cat{font-size:10px;font-weight:700;color:#e91e8c;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.svc-desc{font-size:12px;color:#b07090;line-height:1.5;margin-bottom:10px}
+.svc-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.svc-price{font-size:18px;font-weight:900;color:#e91e8c}
+.svc-duration{font-size:11px;color:#b07090;background:#fff0f6;padding:3px 8px;border-radius:6px}
+.book-svc-btn{width:100%;padding:9px;background:linear-gradient(135deg,#e91e8c,#c51162);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit}
+.book-svc-btn:hover{background:linear-gradient(135deg,#f048a0,#d81b60)}
+
+/* CATEGORY PILLS */
+.cat-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cat-pill{padding:7px 16px;border:1.5px solid #fce4ec;background:#fff;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#b07090;transition:all 0.15s}
+.cat-pill.active,.cat-pill:hover{background:#e91e8c;color:#fff;border-color:#e91e8c}
+
+/* STYLIST CARDS */
+.stylists-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.stylist-card{background:#fff;border-radius:16px;padding:22px;border:1px solid #fce4ec;text-align:center;transition:all 0.2s;box-shadow:0 2px 8px rgba(233,30,140,0.04)}
+.stylist-card:hover{border-color:#e91e8c;box-shadow:0 6px 20px rgba(233,30,140,0.12)}
+.stylist-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#f48fb1,#e91e8c);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 14px rgba(233,30,140,0.25)}
+.stylist-name{font-size:15px;font-weight:800;color:#3d1a2e;margin-bottom:3px}
+.stylist-spec{font-size:11px;color:#e91e8c;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.stylist-rating{font-size:16px;font-weight:800;color:#f59e0b;margin-bottom:6px}
+.stylist-info{font-size:12px;color:#b07090;margin-bottom:3px}
+.stylist-days{font-size:11px;color:#b07090;background:#fff0f6;border-radius:6px;padding:4px 8px;margin-top:6px;display:inline-block}
+
+/* TABLE */
+.table-wrap{background:#fff;border-radius:16px;overflow:auto;border:1px solid #fce4ec;box-shadow:0 2px 8px rgba(233,30,140,0.04)}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead tr{background:#fff0f6}
+th{padding:12px 16px;text-align:left;font-size:11px;font-weight:800;color:#b07090;text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid #fce4ec;white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid #fff5f9;font-size:13px;color:#9a6a84}
+tr:last-child td{border-bottom:none}
+.td-main{font-weight:700;color:#3d1a2e}
+.actions{display:flex;gap:6px}
+.btn-action{border:none;border-radius:7px;padding:5px 9px;cursor:pointer;font-weight:700;font-size:11px;font-family:inherit}
+.btn-done{background:#d1fae5;color:#065f46}
+.btn-cancel{background:#fee2e2;color:#ef4444}
+.btn-edit{background:#fff0f6;color:#e91e8c}
+.btn-delete{background:#fee2e2;color:#ef4444}
+.no-data{padding:36px;text-align:center;color:#d4a0b8}
+
+/* BADGE */
+.badge{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;display:inline-block}
+.badge-confirmed{background:#fff0f6;color:#e91e8c;border:1px solid #fce4ec}
+.badge-completed{background:#d1fae5;color:#065f46}
+.badge-cancelled{background:#fee2e2;color:#ef4444}
+.badge-active{background:#d1fae5;color:#065f46}
+.badge-admin{background:#ede9fe;color:#7c3aed}
+.badge-customer{background:#fff0f6;color:#e91e8c}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-pink{background:linear-gradient(135deg,#e91e8c,#c51162);color:#fff;box-shadow:0 4px 14px rgba(233,30,140,0.3)}
+.btn-pink:hover{background:linear-gradient(135deg,#f048a0,#d81b60)}
+.btn-outline{background:#fff;color:#b07090;border:1.5px solid #fce4ec}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(61,26,46,0.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-top:4px solid #e91e8c;box-shadow:0 24px 64px rgba(233,30,140,0.2)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:22px 28px 0}
+.modal-title{font-size:18px;font-weight:800;color:#3d1a2e}
+.modal-close{border:none;background:#fff0f6;border-radius:10px;width:32px;height:32px;cursor:pointer;color:#e91e8c;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:18px 28px 28px}
+.field{margin-bottom:14px}
+.field label{font-size:11px;font-weight:700;color:#e91e8c;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;border:1.5px solid #fce4ec;border-radius:10px;font-size:14px;color:#3d1a2e;outline:none;font-family:inherit;background:#fff0f6;box-sizing:border-box}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#e91e8c;background:#fff}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+.modal-alert{border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:14px;display:none}
+.modal-alert.error{background:#fee2e2;color:#ef4444}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.review-card{background:#fff;border-radius:16px;padding:20px;border:1px solid #fce4ec}
+.review-stars{font-size:18px;margin-bottom:6px}
+.review-text{font-size:13px;color:#9a6a84;line-height:1.6;margin-bottom:10px;font-style:italic}
+.review-author{font-size:12px;font-weight:700;color:#e91e8c}
+.review-meta{font-size:11px;color:#d4a0b8;margin-top:2px}
+
+/* PRODUCTS */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.product-card{background:#fff;border-radius:14px;padding:18px;border:1px solid #fce4ec;text-align:center;transition:all 0.2s}
+.product-card:hover{border-color:#e91e8c;transform:translateY(-2px)}
+.product-emoji{font-size:36px;margin-bottom:8px;display:block}
+.product-name{font-size:14px;font-weight:700;color:#3d1a2e;margin-bottom:4px}
+.product-cat{font-size:10px;color:#e91e8c;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.product-price{font-size:16px;font-weight:900;color:#e91e8c}
+
+/* PAGE HEADER */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.page-title{font-size:20px;font-weight:900;color:#3d1a2e}
+.page-sub{color:#b07090;font-size:12px;margin-top:2px}
+.filter-bar{background:#fff;border-radius:12px;padding:12px 16px;border:1px solid #fce4ec;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-inp{flex:1;min-width:160px;padding:8px 12px;border:1.5px solid #fce4ec;border-radius:8px;font-size:13px;color:#3d1a2e;outline:none;font-family:inherit;background:#fff0f6}
+.search-inp:focus{border-color:#e91e8c}
+
+/* BOOKING WIZARD */
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.wizard-progress{display:flex;gap:0;margin-bottom:20px}
+.wp-step{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:700;color:#d4a0b8;border-bottom:3px solid #fce4ec;transition:all 0.2s}
+.wp-step.done{color:#e91e8c;border-bottom-color:#e91e8c}
+.time-slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.time-slot{padding:8px 14px;border:1.5px solid #fce4ec;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;color:#b07090;background:#fff0f6;transition:all 0.15s}
+.time-slot:hover,.time-slot.selected{background:#e91e8c;color:#fff;border-color:#e91e8c}
+.stylist-option{display:flex;align-items:center;gap:12px;padding:10px;border:1.5px solid #fce4ec;border-radius:10px;cursor:pointer;margin-bottom:8px;transition:all 0.15s}
+.stylist-option:hover,.stylist-option.selected{border-color:#e91e8c;background:#fff0f6}
+.stylist-opt-avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f48fb1,#e91e8c);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="toastContainer"></div>
+
+<!-- AUTH -->
+<div class="auth-page" id="authPage">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="salon-icon">💅</span>
+      <h1><em>Glamour</em> Salon</h1>
+      <p>Where Beauty Meets Excellence</p>
+    </div>
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('signup')">Join Us</button>
+      </div>
+      <div id="authAlert" class="a-alert"></div>
+      <div id="signupFields" style="display:none">
+        <div class="auth-field"><label>Full Name</label><input class="auth-input" id="authName" placeholder="Your name"></div>
+        <div class="auth-field"><label>Phone</label><input class="auth-input" id="authPhone" placeholder="Mobile number"></div>
+      </div>
+      <div class="auth-field"><label>Email</label><input class="auth-input" id="authEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doAuth()"></div>
+      <div class="auth-field"><label>Password</label>
+        <div class="pass-wrap">
+          <input class="auth-input" id="authPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()">
+          <button class="pass-toggle" onclick="togglePass()">👁</button>
+        </div>
+      </div>
+      <button class="auth-btn" id="authBtn" onclick="doAuth()">💅 Enter Salon</button>
+      <div class="demo-box">
+        <div class="demo-title">Demo Credentials</div>
+        <p>👑 <b>Owner:</b> owner@glamour.com / owner123</p>
+        <p>💅 <b>Customer:</b> alina@email.com / user123</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appLayout">
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <div class="nav-logo" onclick="showPage('home',null)">
+        <div class="nav-logo-icon">💅</div>
+        <span><em>Glamour</em> Salon</span>
+      </div>
+      <div class="nav-links">
+        <button class="nav-link active" onclick="showPage('home',this)">🏠 Home</button>
+        <button class="nav-link" onclick="showPage('services',this)">✂️ Services</button>
+        <button class="nav-link" onclick="showPage('stylists',this)">👩 Stylists</button>
+        <button class="nav-link" onclick="showPage('bookings',this)">📅 My Bookings</button>
+        <button class="nav-link" onclick="showPage('reviews',this)">⭐ Reviews</button>
+        <button class="nav-link" onclick="showPage('products',this)">🛍️ Products</button>
+        <button class="nav-link" id="navAdmin" style="display:none" onclick="showPage('admin',this)">⚙️ Admin</button>
+      </div>
+      <div class="nav-right">
+        <button class="dark-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <div class="user-tag" id="userTag">👤</div>
+        <button class="logout-tag" onclick="logout()">Exit</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="hero-banner">
+        <div>
+          <div class="hero-title">Welcome to <em style="font-style:italic">Glamour</em> Salon ✨</div>
+          <div class="hero-sub">Premium beauty services by expert stylists · Book in minutes</div>
+          <button class="hero-btn" onclick="showPage('services',document.querySelectorAll('.nav-link')[1])">Book Appointment 💅</button>
+        </div>
+      </div>
+      <div class="stats-row" id="homeStats"></div>
+      <div class="cards-row">
+        <div class="card"><div class="card-title">📅 Today's Schedule</div><div id="todayAppts"></div></div>
+        <div class="card"><div class="card-title">🔥 Popular Services</div><div id="popularServices"></div></div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="page" id="page-services">
+      <div class="page-hdr">
+        <div><div class="page-title">Our Services ✂️</div><div class="page-sub" id="servicesCount"></div></div>
+        <button class="btn btn-pink" id="addServiceBtn" style="display:none" onclick="openServiceModal()">➕ Add Service</button>
+      </div>
+      <div class="cat-pills">
+        <span class="cat-pill active" onclick="filterServices('All',this)">All</span>
+        <span class="cat-pill" onclick="filterServices('Hair',this)">💇 Hair</span>
+        <span class="cat-pill" onclick="filterServices('Skin',this)">🧖 Skin</span>
+        <span class="cat-pill" onclick="filterServices('Makeup',this)">💄 Makeup</span>
+        <span class="cat-pill" onclick="filterServices('Nails',this)">💅 Nails</span>
+        <span class="cat-pill" onclick="filterServices('Waxing',this)">🌸 Waxing</span>
+        <span class="cat-pill" onclick="filterServices('Eyebrows',this)">👁️ Eyebrows</span>
+      </div>
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+
+    <!-- STYLISTS -->
+    <div class="page" id="page-stylists">
+      <div class="page-hdr">
+        <div><div class="page-title">Our Expert Stylists 👩</div><div class="page-sub" id="stylistsCount"></div></div>
+      </div>
+      <div class="stylists-grid" id="stylistsGrid"></div>
+    </div>
+
+    <!-- MY BOOKINGS -->
+    <div class="page" id="page-bookings">
+      <div class="page-hdr">
+        <div><div class="page-title">My Bookings 📅</div><div class="page-sub" id="bookingsCount"></div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Service</th><th>Stylist</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="bookingsTable"></tbody>
+        </table>
+        <div id="bookingsEmpty" class="no-data" style="display:none">No bookings yet! Book your first appointment 💅</div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="page" id="page-reviews">
+      <div class="page-hdr">
+        <div><div class="page-title">Customer Reviews ⭐</div></div>
+        <button class="btn btn-pink" onclick="openReviewModal()">✍️ Write Review</button>
+      </div>
+      <div class="reviews-grid" id="reviewsGrid"></div>
+      <div id="reviewsEmpty" class="no-data" style="display:none">No reviews yet. Be the first! ⭐</div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="page" id="page-products">
+      <div class="page-hdr"><div class="page-title">Beauty Products 🛍️</div></div>
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="page" id="page-admin">
+      <div class="page-hdr"><div class="page-title">⚙️ Salon Dashboard</div></div>
+      <div class="stats-row" id="adminStats"></div>
+      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="showAdminTab('appointments',this)" style="border-color:#e91e8c;color:#e91e8c" id="aTab1">All Appointments</button>
+        <button class="btn btn-outline" onclick="showAdminTab('stylists',this)" id="aTab2">Stylists</button>
+        <button class="btn btn-outline" onclick="showAdminTab('services',this)" id="aTab3">Services</button>
+      </div>
+      <div id="adminApptTab">
+        <div class="table-wrap">
+          <table><thead><tr><th>Customer</th><th>Service</th><th>Stylist</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="adminApptTable"></tbody></table>
+        </div>
+      </div>
+      <div id="adminStylistTab" style="display:none">
+        <div class="stylists-grid" id="adminStylistGrid"></div>
+      </div>
+      <div id="adminSvcTab" style="display:none">
+        <div class="services-grid" id="adminSvcGrid"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOOK APPOINTMENT MODAL -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="bookModalTitle">Book Appointment</div>
+        <div style="font-size:12px;color:#b07090;margin-top:2px" id="bookModalSub">Complete your booking</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('bookModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="wizard-progress">
+        <div class="wp-step done" id="wp1">1. Stylist</div>
+        <div class="wp-step" id="wp2">2. Date & Time</div>
+        <div class="wp-step" id="wp3">3. Confirm</div>
+      </div>
+      <div class="modal-alert" id="bookAlert"></div>
+
+      <!-- Step 1: Stylist -->
+      <div class="wizard-step active" id="step1">
+        <div class="field"><label>Choose Stylist</label>
+          <div id="stylistOptions"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('bookModal')">Cancel</button>
+          <button class="btn btn-pink" onclick="nextStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Date & Time -->
+      <div class="wizard-step" id="step2">
+        <div class="field"><label>Select Date</label><input type="date" id="bookDate" min=""></div>
+        <div class="field"><label>Select Time</label>
+          <div class="time-slots" id="timeSlots">
+            <span class="time-slot" onclick="selectTime('09:00 AM',this)">09:00 AM</span>
+            <span class="time-slot" onclick="selectTime('10:00 AM',this)">10:00 AM</span>
+            <span class="time-slot" onclick="selectTime('11:00 AM',this)">11:00 AM</span>
+            <span class="time-slot" onclick="selectTime('12:00 PM',this)">12:00 PM</span>
+            <span class="time-slot" onclick="selectTime('01:00 PM',this)">01:00 PM</span>
+            <span class="time-slot" onclick="selectTime('02:00 PM',this)">02:00 PM</span>
+            <span class="time-slot" onclick="selectTime('03:00 PM',this)">03:00 PM</span>
+            <span class="time-slot" onclick="selectTime('04:00 PM',this)">04:00 PM</span>
+            <span class="time-slot" onclick="selectTime('05:00 PM',this)">05:00 PM</span>
+            <span class="time-slot" onclick="selectTime('06:00 PM',this)">06:00 PM</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="nextStep(1)">← Back</button>
+          <button class="btn btn-pink" onclick="nextStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Confirm -->
+      <div class="wizard-step" id="step3">
+        <div style="background:#fff0f6;border-radius:14px;padding:20px;margin-bottom:14px">
+          <div style="font-size:13px;color:#b07090;margin-bottom:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Booking Summary</div>
+          <div id="bookingSummary"></div>
+        </div>
+        <div class="field"><label>Phone Number</label><input id="bookPhone" placeholder="Your mobile number"></div>
+        <div class="field"><label>Special Notes</label><textarea id="bookNotes" rows="2" placeholder="Any special requests..."></textarea></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="nextStep(2)">← Back</button>
+          <button class="btn btn-pink" onclick="confirmBooking()">💅 Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL (Admin) -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="svcModalTitle">Add Service</div>
+      <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editServiceId">
+      <div class="modal-alert" id="svcAlert"></div>
+      <div class="field-grid">
+        <div class="field"><label>Service Name *</label><input id="svcName" placeholder="e.g. Hair Cut"></div>
+        <div class="field"><label>Emoji</label><input id="svcEmoji" placeholder="✂️"></div>
+      </div>
+      <div class="field-grid">
+        <div class="field"><label>Category</label>
+          <select id="svcCat"><option>Hair</option><option>Skin</option><option>Makeup</option><option>Nails</option><option>Waxing</option><option>Eyebrows</option></select>
+        </div>
+        <div class="field"><label>Duration (mins)</label><input id="svcDuration" type="number" value="45"></div>
+      </div>
+      <div class="field"><label>Price (₹)</label><input id="svcPrice" type="number" placeholder="999"></div>
+      <div class="field"><label>Description</label><textarea id="svcDesc" rows="2" placeholder="Service description..."></textarea></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('serviceModal')">Cancel</button>
+        <button class="btn btn-pink" onclick="saveService()" id="saveSvcBtn">Add Service</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Write a Review ⭐</div>
+      <button class="modal-close" onclick="closeModal('reviewModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-alert" id="reviewAlert"></div>
+      <div class="field"><label>Stylist</label><select id="revStylist" style="width:100%;padding:10px 14px;border:1.5px solid #fce4ec;border-radius:10px;font-size:14px;color:#3d1a2e;outline:none;font-family:inherit;background:#fff0f6"></select></div>
+      <div class="field"><label>Rating</label>
+        <div style="display:flex;gap:8px;margin-top:4px" id="starRating">
+          <span style="font-size:28px;cursor:pointer" onclick="setRating(1,this)">⭐</span>
+          <span style="font-size:28px;cursor:pointer" onclick="setRating(2,this)">⭐</span>
+          <span style="font-size:28px;cursor:pointer" onclick="setRating(3,this)">⭐</span>
+          <span style="font-size:28px;cursor:pointer" onclick="setRating(4,this)">⭐</span>
+          <span style="font-size:28px;cursor:pointer" onclick="setRating(5,this)">⭐</span>
+        </div>
+        <input type="hidden" id="revRating" value="5">
+      </div>
+      <div class="field"><label>Your Review</label><textarea id="revComment" rows="3" placeholder="Share your experience..."></textarea></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('reviewModal')">Cancel</button>
+        <button class="btn btn-pink" onclick="submitReview()">⭐ Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentUser=null, authMode="login", isDark=false;
+let allServices=[], allStylists=[], selectedService=null, selectedStylist=null, selectedTime=null, currentStep=1;
+
+// THEME
+function toggleTheme(){
+  isDark=!isDark;document.body.classList.toggle("dark",isDark);
+  document.getElementById("themeBtn").textContent=isDark?"☀️":"🌙";
+  localStorage.setItem("salonTheme",isDark?"dark":"light");
+}
+function initTheme(){if(localStorage.getItem("salonTheme")==="dark"){isDark=true;document.body.classList.add("dark");const b=document.getElementById("themeBtn");if(b)b.textContent="☀️";}}
+
+// TOAST
+function showToast(title,msg,type="success"){
+  const icons={success:"✅",error:"❌",warning:"⚠️",info:"📢"};
+  const id="t"+Date.now();const el=document.createElement("div");
+  el.className="toast "+type;el.id=id;
+  el.innerHTML=`<div class="toast-icon">${icons[type]}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div><button class="toast-close" onclick="removeToast('${id}')">✕</button>`;
+  document.getElementById("toastContainer").appendChild(el);setTimeout(()=>removeToast(id),4000);
+}
+function removeToast(id){const el=document.getElementById(id);if(el){el.style.animation="slideOut 0.3s ease forwards";setTimeout(()=>el.remove(),300);}}
+
+// AUTH
+function switchTab(tab){
+  authMode=tab;
+  document.querySelectorAll(".auth-tab").forEach((t,i)=>t.classList.toggle("active",(i===0&&tab==="login")||(i===1&&tab==="signup")));
+  document.getElementById("signupFields").style.display=tab==="signup"?"block":"none";
+  document.getElementById("authBtn").textContent=tab==="login"?"💅 Enter Salon":"🌸 Join Us";
+  document.getElementById("authAlert").style.display="none";
+}
+function togglePass(){const i=document.getElementById("authPass");i.type=i.type==="password"?"text":"password";}
+async function doAuth(){
+  const email=document.getElementById("authEmail").value.trim();
+  const pass=document.getElementById("authPass").value;
+  if(authMode==="login"){
+    const d=await fetch("/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})}).then(r=>r.json());
+    if(d.ok)initApp();
+    else{const el=document.getElementById("authAlert");el.textContent="⚠️ "+d.msg;el.className="a-alert error";el.style.display="block";}
+  } else {
+    const name=document.getElementById("authName").value.trim();
+    const phone=document.getElementById("authPhone").value.trim();
+    const d=await fetch("/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password:pass,phone})}).then(r=>r.json());
+    if(d.ok){const el=document.getElementById("authAlert");el.textContent="✅ Account created! Sign in now.";el.className="a-alert success";el.style.display="block";switchTab("login");}
+    else{const el=document.getElementById("authAlert");el.textContent="⚠️ "+d.msg;el.className="a-alert error";el.style.display="block";}
+  }
+}
+async function logout(){await fetch("/logout");location.reload();}
+
+async function initApp(){
+  const s=await fetch("/api/session").then(r=>r.json());
+  if(!s.logged_in){document.getElementById("authPage").style.display="flex";document.getElementById("appLayout").style.display="none";return;}
+  currentUser=s;
+  document.getElementById("authPage").style.display="none";
+  document.getElementById("appLayout").style.display="flex";
+  document.getElementById("userTag").textContent="👤 "+s.name;
+  if(s.role==="admin"){document.getElementById("navAdmin").style.display="inline-block";document.getElementById("addServiceBtn").style.display="inline-flex";}
+  const minDate=new Date().toISOString().split("T")[0];
+  document.getElementById("bookDate").min=minDate;
+  document.getElementById("bookDate").value=minDate;
+  loadHome();
+}
+
+function showPage(name,btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  if(btn)btn.classList.add("active");
+  if(name==="home")loadHome();
+  if(name==="services")loadServices("All");
+  if(name==="stylists")loadStylists();
+  if(name==="bookings")loadBookings();
+  if(name==="reviews")loadReviews();
+  if(name==="products")loadProducts();
+  if(name==="admin")loadAdmin();
+}
+
+// HOME
+async function loadHome(){
+  const d=await fetch("/api/dashboard").then(r=>r.json());
+  const isAdmin=currentUser.role==="admin";
+  document.getElementById("homeStats").innerHTML=`
+    ${sc("rgba(233,30,140,0.1)","💅",d.today_appts,"Today's Appointments","#e91e8c")}
+    ${sc("rgba(34,197,94,0.1)","💰",isAdmin?"₹"+Math.round(d.total_revenue).toLocaleString():d.my_appts.length,"${isAdmin?'Revenue':'My Bookings'}","#16a34a")}
+    ${sc("rgba(59,130,246,0.1)","👤",d.total_clients,"Total Clients","#2563eb")}
+    ${sc("rgba(245,158,11,0.1)","📅",d.pending,"Upcoming","#d97706")}`;
+  // fix template literals
+  const cards=document.getElementById("homeStats").querySelectorAll(".stat-label");
+  cards[1].textContent=isAdmin?"Revenue":"My Bookings";
+  document.getElementById("todayAppts").innerHTML=d.todays_appts.length?d.todays_appts.map(a=>`
+    <div class="appt-row">
+      <div><div class="appt-name">${a.customer_name}</div><div class="appt-meta">${a.service_name} · ${a.stylist_name}</div></div>
+      <div class="appt-time">${a.appt_time}</div>
+    </div>`).join(""):"<div class='no-data'>No appointments today 🌸</div>";
+  document.getElementById("popularServices").innerHTML=d.top_services.map((s,i)=>`
+    <div class="appt-row">
+      <div><div class="appt-name">${s.service_name}</div></div>
+      <div style="font-size:13px;font-weight:700;color:#e91e8c">${s.cnt} bookings</div>
+    </div>`).join("");
+}
+function sc(bg,icon,val,label,color){return`<div class="stat-card"><div class="stat-icon" style="background:${bg}">${icon}</div><div><div class="stat-val" style="color:${color}">${val}</div><div class="stat-label">${label}</div></div></div>`;}
+
+// SERVICES
+let currentCat="All";
+async function loadServices(cat){
+  currentCat=cat;
+  allServices=await fetch(`/api/services?category=${cat}`).then(r=>r.json());
+  document.getElementById("servicesCount").textContent=`${allServices.length} services available`;
+  renderServices(allServices);
+}
+function filterServices(cat,el){document.querySelectorAll(".cat-pill").forEach(p=>p.classList.remove("active"));el.classList.add("active");loadServices(cat);}
+function renderServices(services){
+  const isAdmin=currentUser&&currentUser.role==="admin";
+  document.getElementById("servicesGrid").innerHTML=services.map(s=>`
+    <div class="service-card">
+      <span class="svc-emoji">${s.image_emoji}</span>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-cat">${s.category}</div>
+      <div class="svc-desc">${s.description}</div>
+      <div class="svc-meta"><span class="svc-price">₹${s.price}</span><span class="svc-duration">⏱ ${s.duration} min</span></div>
+      <button class="book-svc-btn" onclick="openBooking('${s.id}')">💅 Book Now</button>
+      ${isAdmin?`<div style="display:flex;gap:6px;margin-top:8px"><button class="btn-action btn-edit" onclick="editService('${s.id}')">✏️ Edit</button><button class="btn-action btn-delete" onclick="deleteService('${s.id}')">🗑️</button></div>`:""}
+    </div>`).join("");
+}
+
+// STYLISTS
+async function loadStylists(){
+  allStylists=await fetch("/api/stylists").then(r=>r.json());
+  document.getElementById("stylistsCount").textContent=`${allStylists.length} expert stylists`;
+  document.getElementById("stylistsGrid").innerHTML=allStylists.map(s=>`
+    <div class="stylist-card">
+      <div class="stylist-avatar">${s.image_emoji}</div>
+      <div class="stylist-name">${s.name}</div>
+      <div class="stylist-spec">${s.specialization}</div>
+      <div class="stylist-rating">${"⭐".repeat(Math.round(s.rating))} ${s.rating}</div>
+      <div class="stylist-info">📞 ${s.phone}</div>
+      <div class="stylist-info">🏆 ${s.experience} years exp</div>
+      <div class="stylist-days">${s.available_days.replace(/,/g," · ")}</div>
+    </div>`).join("");
+}
+
+// BOOK FLOW
+async function openBooking(serviceId){
+  selectedService=allServices.find(s=>s.id===serviceId);
+  if(!selectedService){const svcs=await fetch("/api/services").then(r=>r.json());selectedService=svcs.find(s=>s.id===serviceId);}
+  selectedStylist=null;selectedTime=null;currentStep=1;
+  document.getElementById("bookModalTitle").textContent=selectedService.image_emoji+" "+selectedService.name;
+  document.getElementById("bookModalSub").textContent="₹"+selectedService.price+" · "+selectedService.duration+" min";
+  document.getElementById("bookAlert").style.display="none";
+  allStylists=await fetch("/api/stylists").then(r=>r.json());
+  document.getElementById("stylistOptions").innerHTML=allStylists.map(s=>`
+    <div class="stylist-option" id="sopt-${s.id}" onclick="selectStylist('${s.id}',this)">
+      <div class="stylist-opt-avatar">${s.image_emoji}</div>
+      <div>
+        <div style="font-weight:800;font-size:14px;color:#3d1a2e">${s.name}</div>
+        <div style="font-size:12px;color:#e91e8c;font-weight:700">${s.specialization}</div>
+        <div style="font-size:11px;color:#b07090">${"⭐".repeat(Math.round(s.rating))} ${s.rating} · ${s.experience}yr exp</div>
+      </div>
+    </div>`).join("");
+  goToStep(1);
+  document.getElementById("bookModal").classList.add("show");
+}
+function selectStylist(id,el){
+  selectedStylist=allStylists.find(s=>s.id===id);
+  document.querySelectorAll(".stylist-option").forEach(o=>o.classList.remove("selected"));
+  el.classList.add("selected");
+}
+function selectTime(time,el){
+  selectedTime=time;
+  document.querySelectorAll(".time-slot").forEach(t=>t.classList.remove("selected"));
+  el.classList.add("selected");
+}
+function nextStep(n){
+  if(n===2&&!selectedStylist){const el=document.getElementById("bookAlert");el.textContent="⚠️ Please select a stylist!";el.className="modal-alert error";el.style.display="block";return;}
+  if(n===3&&!selectedTime){const el=document.getElementById("bookAlert");el.textContent="⚠️ Please select a time!";el.className="modal-alert error";el.style.display="block";return;}
+  if(n===3){
+    const dateVal=document.getElementById("bookDate").value;
+    const parts=dateVal.split("-");
+    const formatted=`${parts[2]}/${parts[1]}/${parts[0]}`;
+    document.getElementById("bookingSummary").innerHTML=`
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#b07090">Service</span><span style="font-weight:700;color:#3d1a2e">${selectedService.name}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#b07090">Stylist</span><span style="font-weight:700;color:#3d1a2e">${selectedStylist.name}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#b07090">Date</span><span style="font-weight:700;color:#3d1a2e">${formatted}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#b07090">Time</span><span style="font-weight:700;color:#e91e8c">${selectedTime}</span></div>
+        <div style="display:flex;justify-content:space-between;border-top:1px solid #fce4ec;padding-top:8px;margin-top:4px"><span style="font-weight:800;color:#3d1a2e">Total</span><span style="font-weight:900;font-size:18px;color:#e91e8c">₹${selectedService.price}</span></div>
+      </div>`;
+  }
+  document.getElementById("bookAlert").style.display="none";
+  goToStep(n);
+}
+function goToStep(n){
+  currentStep=n;
+  document.querySelectorAll(".wizard-step").forEach((s,i)=>{s.classList.toggle("active",i+1===n);});
+  document.querySelectorAll(".wp-step").forEach((s,i)=>{s.classList.toggle("done",i+1<=n);});
+}
+async function confirmBooking(){
+  const dateVal=document.getElementById("bookDate").value;
+  const parts=dateVal.split("-");
+  const formatted=`${parts[2]}/${parts[1]}/${parts[0]}`;
+  const data={service_id:selectedService.id,stylist_id:selectedStylist.id,appt_date:formatted,appt_time:selectedTime,phone:document.getElementById("bookPhone").value,notes:document.getElementById("bookNotes").value};
+  const res=await fetch("/api/appointments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)}).then(r=>r.json());
+  if(res.ok){showToast("Booked! 💅","Appointment confirmed! See you soon 🌸","success");closeModal("bookModal");loadBookings();showPage("bookings",document.querySelectorAll(".nav-link")[3]);}
+  else{const el=document.getElementById("bookAlert");el.textContent="⚠️ "+res.msg;el.className="modal-alert error";el.style.display="block";}
+}
+
+// BOOKINGS
+async function loadBookings(){
+  const appts=await fetch("/api/appointments").then(r=>r.json());
+  document.getElementById("bookingsCount").textContent=`${appts.length} appointments`;
+  const tb=document.getElementById("bookingsTable");
+  const empty=document.getElementById("bookingsEmpty");
+  if(!appts.length){tb.innerHTML="";empty.style.display="block";return;}
+  empty.style.display="none";
+  tb.innerHTML=appts.map(a=>`
+    <tr>
+      <td><div class="td-main">${a.service_name}</div><div style="font-size:11px;color:#b07090">${a.notes||""}</div></td>
+      <td>${a.stylist_name}</td>
+      <td style="font-size:12px">${a.appt_date}</td>
+      <td style="font-weight:700;color:#e91e8c">${a.appt_time}</td>
+      <td style="font-weight:800;color:#e91e8c">₹${a.service_price}</td>
+      <td><span class="badge badge-${a.status.toLowerCase()}">${a.status}</span></td>
+      <td>${a.status==="Confirmed"?`<button class="btn-action btn-cancel" onclick="cancelAppt('${a.id}')">❌ Cancel</button>`:"—"}</td>
+    </tr>`).join("");
+}
+async function cancelAppt(id){if(!confirm("Cancel appointment?"))return;await fetch(`/api/appointments/${id}/cancel`,{method:"PUT"});showToast("Cancelled","Appointment cancel ho gaya!","warning");loadBookings();}
+
+// REVIEWS
+async function loadReviews(){
+  const reviews=await fetch("/api/reviews").then(r=>r.json());
+  const grid=document.getElementById("reviewsGrid");
+  const empty=document.getElementById("reviewsEmpty");
+  if(!reviews.length){grid.innerHTML="";empty.style.display="block";return;}
+  empty.style.display="none";
+  grid.innerHTML=reviews.map(r=>`
+    <div class="review-card">
+      <div class="review-stars">${"⭐".repeat(r.rating)}</div>
+      <div class="review-text">"${r.comment}"</div>
+      <div class="review-author">— ${r.customer_name}</div>
+      <div class="review-meta">For ${r.stylist_name} · ${r.created_at}</div>
+    </div>`).join("");
+}
+async function openReviewModal(){
+  allStylists=await fetch("/api/stylists").then(r=>r.json());
+  document.getElementById("revStylist").innerHTML=allStylists.map(s=>`<option value="${s.id}" data-name="${s.name}">${s.name} - ${s.specialization}</option>`).join("");
+  document.getElementById("reviewAlert").style.display="none";
+  document.getElementById("revComment").value="";
+  document.getElementById("revRating").value=5;
+  document.getElementById("reviewModal").classList.add("show");
+}
+function setRating(n,el){
+  document.getElementById("revRating").value=n;
+  const stars=document.querySelectorAll("#starRating span");
+  stars.forEach((s,i)=>{s.style.opacity=i<n?"1":"0.3";});
+}
+async function submitReview(){
+  const comment=document.getElementById("revComment").value.trim();
+  if(!comment){const el=document.getElementById("reviewAlert");el.textContent="⚠️ Review likhna zaroori hai!";el.className="modal-alert error";el.style.display="block";return;}
+  const sel=document.getElementById("revStylist");
+  const stylistName=sel.options[sel.selectedIndex].getAttribute("data-name");
+  await fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({stylist_id:sel.value,stylist_name:stylistName,rating:document.getElementById("revRating").value,comment})});
+  showToast("Review Submitted! ⭐","Shukriya for your feedback!","success");closeModal("reviewModal");loadReviews();
+}
+
+// PRODUCTS
+async function loadProducts(){
+  const products=await fetch("/api/products").then(r=>r.json());
+  document.getElementById("productsGrid").innerHTML=products.map(p=>`
+    <div class="product-card">
+      <span class="product-emoji">${p.image_emoji}</span>
+      <div class="product-name">${p.name}</div>
+      <div class="product-cat">${p.category}</div>
+      <div class="product-price">₹${p.price}</div>
+      <div style="font-size:11px;color:#b07090;margin-top:4px">Stock: ${p.stock}</div>
+    </div>`).join("");
+}
+
+// SERVICE MODAL
+function openServiceModal(){
+  document.getElementById("editServiceId").value="";document.getElementById("svcModalTitle").textContent="Add Service";document.getElementById("saveSvcBtn").textContent="Add Service";
+  ["svcName","svcEmoji","svcDesc"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("svcDuration").value=45;document.getElementById("svcPrice").value="";document.getElementById("svcAlert").style.display="none";
+  document.getElementById("serviceModal").classList.add("show");
+}
+function editService(id){
+  const s=allServices.find(x=>x.id===id);if(!s)return;
+  document.getElementById("editServiceId").value=id;document.getElementById("svcModalTitle").textContent="Edit Service";document.getElementById("saveSvcBtn").textContent="Save";
+  document.getElementById("svcName").value=s.name;document.getElementById("svcEmoji").value=s.image_emoji;
+  document.getElementById("svcCat").value=s.category;document.getElementById("svcDuration").value=s.duration;
+  document.getElementById("svcPrice").value=s.price;document.getElementById("svcDesc").value=s.description;
+  document.getElementById("svcAlert").style.display="none";document.getElementById("serviceModal").classList.add("show");
+}
+async function saveService(){
+  const eid=document.getElementById("editServiceId").value;
+  const data={name:document.getElementById("svcName").value.trim(),category:document.getElementById("svcCat").value,duration:document.getElementById("svcDuration").value,price:document.getElementById("svcPrice").value,description:document.getElementById("svcDesc").value,image_emoji:document.getElementById("svcEmoji").value||"💅"};
+  if(!data.name||!data.price){const el=document.getElementById("svcAlert");el.textContent="⚠️ Name and price required!";el.className="modal-alert error";el.style.display="block";return;}
+  if(eid)await fetch(`/api/services/${eid}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  else await fetch("/api/services",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  showToast("Saved! ✂️","Service save ho gaya!","success");closeModal("serviceModal");loadServices(currentCat);
+}
+async function deleteService(id){if(!confirm("Delete service?"))return;await fetch(`/api/services/${id}`,{method:"DELETE"});showToast("Deleted","Service delete ho gaya!","warning");loadServices(currentCat);}
+
+// ADMIN
+async function loadAdmin(){
+  const d=await fetch("/api/admin/stats").then(r=>r.json());
+  document.getElementById("adminStats").innerHTML=`
+    ${sc("rgba(233,30,140,0.1)","📅",d.total_appointments,"Total Appointments","#e91e8c")}
+    ${sc("rgba(34,197,94,0.1)","✅",d.completed,"Completed","#16a34a")}
+    ${sc("rgba(245,158,11,0.1)","💰","₹"+Math.round(d.revenue).toLocaleString(),"Revenue","#d97706")}
+    ${sc("rgba(59,130,246,0.1)","👤",d.total_clients,"Customers","#2563eb")}`;
+  document.getElementById("adminApptTable").innerHTML=d.all_appointments.map(a=>`
+    <tr>
+      <td class="td-main">${a.customer_name}</td>
+      <td>${a.service_name}</td>
+      <td>${a.stylist_name}</td>
+      <td style="font-size:12px">${a.appt_date}</td>
+      <td style="color:#e91e8c;font-weight:700">${a.appt_time}</td>
+      <td style="font-weight:800;color:#e91e8c">₹${a.service_price}</td>
+      <td><span class="badge badge-${a.status.toLowerCase()}">${a.status}</span></td>
+      <td><div class="actions">
+        ${a.status==="Confirmed"?`<button class="btn-action btn-done" onclick="updateAppt('${a.id}','Completed')">✅</button><button class="btn-action btn-cancel" onclick="updateAppt('${a.id}','Cancelled')">❌</button>`:""}
+      </div></td>
+    </tr>`).join("");
+  document.getElementById("adminStylistGrid").innerHTML=d.all_stylists.map(s=>`
+    <div class="stylist-card">
+      <div class="stylist-avatar">${s.image_emoji}</div>
+      <div class="stylist-name">${s.name}</div>
+      <div class="stylist-spec">${s.specialization}</div>
+      <div class="stylist-rating">${"⭐".repeat(Math.round(s.rating))} ${s.rating}</div>
+      <div class="stylist-info">📞 ${s.phone}</div>
+      <div class="stylist-info">🏆 ${s.experience} yrs · <span class="badge badge-${s.status.toLowerCase()}">${s.status}</span></div>
+    </div>`).join("");
+  document.getElementById("adminSvcGrid").innerHTML=d.all_services.map(s=>`
+    <div class="service-card">
+      <span class="svc-emoji">${s.image_emoji}</span>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-cat">${s.category}</div>
+      <div class="svc-meta"><span class="svc-price">₹${s.price}</span><span class="svc-duration">${s.duration} min</span></div>
+      <span class="badge badge-${s.status.toLowerCase()}">${s.status}</span>
+      <div style="display:flex;gap:6px;margin-top:8px"><button class="btn-action btn-edit" onclick="editService('${s.id}');closeModal('serviceModal');document.getElementById('serviceModal').classList.add('show')">✏️</button><button class="btn-action btn-delete" onclick="deleteService('${s.id}')">🗑️</button></div>
+    </div>`).join("");
+}
+function showAdminTab(tab,btn){
+  document.getElementById("adminApptTab").style.display=tab==="appointments"?"block":"none";
+  document.getElementById("adminStylistTab").style.display=tab==="stylists"?"block":"none";
+  document.getElementById("adminSvcTab").style.display=tab==="services"?"block":"none";
+  document.querySelectorAll("#page-admin .btn-outline,.btn-pink").forEach(b=>{b.style.borderColor="";b.style.color="";});
+  if(btn){btn.style.borderColor="#e91e8c";btn.style.color="#e91e8c";}
+}
+async function updateAppt(id,status){
+  await fetch(`/api/appointments/${id}/status`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});
+  showToast("Updated!",`Appointment → ${status}`,"info");loadAdmin();
+}
+
+function closeModal(id){document.getElementById(id).classList.remove("show");}
+
+initTheme();
+initApp();
+</script>
+</body>
+</html>
